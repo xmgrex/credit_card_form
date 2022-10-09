@@ -1,6 +1,6 @@
-import 'package:add_card/constains.dart';
-import 'package:add_card/screens/new_card/add_new_card.dart';
+import 'package:credit_card_form/credit_card_form.dart';
 import 'package:flutter/material.dart';
+import 'constains.dart';
 
 void main() {
   runApp(const MyApp());
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
-            primary: primaryColor,
+            backgroundColor: primaryColor,
             minimumSize: const Size(double.infinity, 56),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
-            primary: Colors.black,
+            foregroundColor: Colors.black,
             minimumSize: const Size(double.infinity, 56),
             shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -50,7 +50,18 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const AddNewCardScreen(),
+      home: Scaffold(
+        backgroundColor: Colors.white,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(defaultPadding),
+            child: AddNewCardScreen(
+              addCard: () {},
+              // addCardButtonText: ,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
