@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         outlinedButtonTheme: OutlinedButtonThemeData(
           style: OutlinedButton.styleFrom(
+            backgroundColor: Colors.transparent,
             foregroundColor: Colors.black,
             minimumSize: const Size(double.infinity, 56),
             shape: const RoundedRectangleBorder(
@@ -55,6 +56,7 @@ class MyApp extends StatelessWidget {
         body: SafeArea(
           child: AddNewCardForm(
             addCard: () {},
+            scan: () {},
             // addCardButtonText: ,
           ),
         ),

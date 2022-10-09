@@ -17,7 +17,13 @@ class AddNewCardForm extends StatefulWidget {
     this.decoration,
     this.hintText,
     this.addCardButtonStyle,
-    this.scanCardButtonStyle, this.padding,
+    this.scanCardButtonStyle,
+    this.padding,
+    this.numberFormPrefixIcon,
+    this.numberFormSuffixIcon,
+    this.cvvFormPrefixIcon,
+    this.mmyyFormPrefixIcon,
+    this.scanButtonIcon,
   }) : super(key: key);
 
   final Function()? scan;
@@ -29,6 +35,11 @@ class AddNewCardForm extends StatefulWidget {
   final ButtonStyle? addCardButtonStyle;
   final ButtonStyle? scanCardButtonStyle;
   final EdgeInsetsGeometry? padding;
+  final Widget? numberFormPrefixIcon;
+  final Widget? numberFormSuffixIcon;
+  final Widget? cvvFormPrefixIcon;
+  final Widget? mmyyFormPrefixIcon;
+  final Widget? scanButtonIcon;
 
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
@@ -90,20 +101,22 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                   ],
                   decoration: widget.decoration ??
                       InputDecoration(
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          child: SvgPicture.asset("assets/icons/card.svg"),
-                        ),
-                        suffixIcon: SizedBox(
-                          width: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 8),
-                            child: (_paymentCard.type != null)
-                                ? CardUtils.getCardIcon(_paymentCard.type)
-                                : null,
-                          ),
-                        ),
+                        prefixIcon: widget.numberFormPrefixIcon ??
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              child: SvgPicture.asset("assets/icons/card.svg"),
+                            ),
+                        suffixIcon: widget.numberFormSuffixIcon ??
+                            SizedBox(
+                              width: 40,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 10, horizontal: 8),
+                                child: (_paymentCard.type != null)
+                                    ? CardUtils.getCardIcon(_paymentCard.type)
+                                    : null,
+                              ),
+                            ),
                         hintText: widget.hintText ?? "Card number",
                       ),
                 ),
@@ -124,10 +137,13 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                         validator: CardUtils.validateCVV,
                         decoration: widget.decoration ??
                             InputDecoration(
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child: SvgPicture.asset("assets/icons/Cvv.svg"),
-                              ),
+                              prefixIcon: widget.cvvFormPrefixIcon ??
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/Cvv.svg"),
+                                  ),
                               hintText: widget.hintText ?? "CVV",
                             ),
                       ),
@@ -136,7 +152,8 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                     Expanded(
                       child: TextFormField(
                         onSaved: (value) {
-                          List<int> expireDate = CardUtils.getExpiryDate(value!);
+                          List<int> expireDate =
+                              CardUtils.getExpiryDate(value!);
                           _paymentCard.month = expireDate.first;
                           _paymentCard.year = expireDate[1];
                         },
@@ -149,11 +166,13 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                         validator: CardUtils.validateDate,
                         decoration: widget.decoration ??
                             InputDecoration(
-                              prefixIcon: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 10),
-                                child:
-                                    SvgPicture.asset("assets/icons/calender.svg"),
-                              ),
+                              prefixIcon: widget.mmyyFormPrefixIcon ??
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/calender.svg"),
+                                  ),
                               hintText: widget.hintText ?? "MM/YY",
                             ),
                       ),
@@ -166,26 +185,29 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
           const Spacer(flex: 2),
           OutlinedButton.icon(
             onPressed: widget.scan,
-            icon: SvgPicture.asset("assets/icons/scan.svg"),
+            icon: widget.scanButtonIcon ??
+                SvgPicture.asset("assets/icons/scan.svg"),
             label: Text(widget.scanCardButtonText ?? "Scan card"),
-            style: widget.scanCardButtonStyle ?? ElevatedButton.styleFrom(
-              backgroundColor: primaryColor,
-              minimumSize: const Size(double.infinity, 56),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-              ),
-            ),
+            style: widget.scanCardButtonStyle ??
+                ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  minimumSize: const Size(double.infinity, 56),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ),
+                ),
           ),
           Padding(
             padding: const EdgeInsets.only(top: defaultPadding),
             child: ElevatedButton(
-              style: widget.addCardButtonStyle ?? OutlinedButton.styleFrom(
-              foregroundColor: Colors.black,
-              minimumSize: const Size(double.infinity, 56),
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(12)),
-              ),
-            ),
+              style: widget.addCardButtonStyle ??
+                  OutlinedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    minimumSize: const Size(double.infinity, 56),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(12)),
+                    ),
+                  ),
               onPressed: widget.addCard,
               child: Text(widget.addCardButtonText ?? "Add card"),
             ),
