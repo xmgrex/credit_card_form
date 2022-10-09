@@ -53,12 +53,9 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(defaultPadding),
-            child: AddNewCardScreen(
-              addCard: () {},
-              // addCardButtonText: ,
-            ),
+          child: AddNewCardForm(
+            addCard: () {},
+            // addCardButtonText: ,
           ),
         ),
       ),

@@ -7,8 +7,8 @@ import 'components/card_type.dart';
 import 'components/card_utils.dart';
 import 'components/input_formatters.dart';
 
-class AddNewCardScreen extends StatefulWidget {
-  const AddNewCardScreen({
+class AddNewCardForm extends StatefulWidget {
+  const AddNewCardForm({
     Key? key,
     this.scan,
     this.addCard,
@@ -17,7 +17,7 @@ class AddNewCardScreen extends StatefulWidget {
     this.decoration,
     this.hintText,
     this.addCardButtonStyle,
-    this.scanCardButtonStyle,
+    this.scanCardButtonStyle, this.padding,
   }) : super(key: key);
 
   final Function()? scan;
@@ -28,12 +28,13 @@ class AddNewCardScreen extends StatefulWidget {
   final String? hintText;
   final ButtonStyle? addCardButtonStyle;
   final ButtonStyle? scanCardButtonStyle;
+  final EdgeInsetsGeometry? padding;
 
   @override
-  State<AddNewCardScreen> createState() => _AddNewCardScreenState();
+  State<AddNewCardForm> createState() => _AddNewCardFormState();
 }
 
-class _AddNewCardScreenState extends State<AddNewCardScreen> {
+class _AddNewCardFormState extends State<AddNewCardForm> {
   TextEditingController creditCardController = TextEditingController();
   final PaymentCard _paymentCard = PaymentCard();
 
@@ -67,127 +68,130 @@ class _AddNewCardScreenState extends State<AddNewCardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Spacer(),
-        Form(
-          child: Column(
-            children: [
-              TextFormField(
-                onSaved: (cardNum) {
-                  _paymentCard.number = CardUtils.getCleanedNumber(cardNum!);
-                },
-                controller: creditCardController,
-                keyboardType: TextInputType.number,
-                validator: CardUtils.validateCardNum,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(19),
-                  CardNumberInputFormatter(),
-                ],
-                decoration: widget.decoration ??
-                    InputDecoration(
-                      prefixIcon: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: SvgPicture.asset("assets/icons/card.svg"),
-                      ),
-                      suffixIcon: SizedBox(
-                        width: 40,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 8),
-                          child: (_paymentCard.type != null)
-                              ? CardUtils.getCardIcon(_paymentCard.type)
-                              : null,
+    return Padding(
+      padding: widget.padding ?? const EdgeInsets.all(defaultPadding),
+      child: Column(
+        children: [
+          const Spacer(),
+          Form(
+            child: Column(
+              children: [
+                TextFormField(
+                  onSaved: (cardNum) {
+                    _paymentCard.number = CardUtils.getCleanedNumber(cardNum!);
+                  },
+                  controller: creditCardController,
+                  keyboardType: TextInputType.number,
+                  validator: CardUtils.validateCardNum,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(19),
+                    CardNumberInputFormatter(),
+                  ],
+                  decoration: widget.decoration ??
+                      InputDecoration(
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: SvgPicture.asset("assets/icons/card.svg"),
                         ),
+                        suffixIcon: SizedBox(
+                          width: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 8),
+                            child: (_paymentCard.type != null)
+                                ? CardUtils.getCardIcon(_paymentCard.type)
+                                : null,
+                          ),
+                        ),
+                        hintText: widget.hintText ?? "Card number",
                       ),
-                      hintText: widget.hintText ?? "Card number",
-                    ),
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      onSaved: (cvv) {
-                        _paymentCard.cvv = int.parse(cvv!);
-                      },
-                      keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.next,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(4),
-                      ],
-                      validator: CardUtils.validateCVV,
-                      decoration: widget.decoration ??
-                          InputDecoration(
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: SvgPicture.asset("assets/icons/Cvv.svg"),
+                ),
+                const SizedBox(height: 16.0),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        onSaved: (cvv) {
+                          _paymentCard.cvv = int.parse(cvv!);
+                        },
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(4),
+                        ],
+                        validator: CardUtils.validateCVV,
+                        decoration: widget.decoration ??
+                            InputDecoration(
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child: SvgPicture.asset("assets/icons/Cvv.svg"),
+                              ),
+                              hintText: widget.hintText ?? "CVV",
                             ),
-                            hintText: widget.hintText ?? "CVV",
-                          ),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: defaultPadding),
-                  Expanded(
-                    child: TextFormField(
-                      onSaved: (value) {
-                        List<int> expireDate = CardUtils.getExpiryDate(value!);
-                        _paymentCard.month = expireDate.first;
-                        _paymentCard.year = expireDate[1];
-                      },
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                        LengthLimitingTextInputFormatter(4),
-                        CardMonthInputFormatter(),
-                      ],
-                      validator: CardUtils.validateDate,
-                      decoration: widget.decoration ??
-                          InputDecoration(
-                            prefixIcon: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child:
-                                  SvgPicture.asset("assets/icons/calender.svg"),
+                    const SizedBox(width: defaultPadding),
+                    Expanded(
+                      child: TextFormField(
+                        onSaved: (value) {
+                          List<int> expireDate = CardUtils.getExpiryDate(value!);
+                          _paymentCard.month = expireDate.first;
+                          _paymentCard.year = expireDate[1];
+                        },
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(4),
+                          CardMonthInputFormatter(),
+                        ],
+                        validator: CardUtils.validateDate,
+                        decoration: widget.decoration ??
+                            InputDecoration(
+                              prefixIcon: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 10),
+                                child:
+                                    SvgPicture.asset("assets/icons/calender.svg"),
+                              ),
+                              hintText: widget.hintText ?? "MM/YY",
                             ),
-                            hintText: widget.hintText ?? "MM/YY",
-                          ),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        const Spacer(flex: 2),
-        OutlinedButton.icon(
-          onPressed: widget.scan,
-          icon: SvgPicture.asset("assets/icons/scan.svg"),
-          label: Text(widget.scanCardButtonText ?? "Scan card"),
-          style: widget.scanCardButtonStyle ?? ElevatedButton.styleFrom(
-            backgroundColor: primaryColor,
-            minimumSize: const Size(double.infinity, 56),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+                  ],
+                ),
+              ],
             ),
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(top: defaultPadding),
-          child: ElevatedButton(
-            style: widget.addCardButtonStyle ?? OutlinedButton.styleFrom(
-            foregroundColor: Colors.black,
-            minimumSize: const Size(double.infinity, 56),
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
+          const Spacer(flex: 2),
+          OutlinedButton.icon(
+            onPressed: widget.scan,
+            icon: SvgPicture.asset("assets/icons/scan.svg"),
+            label: Text(widget.scanCardButtonText ?? "Scan card"),
+            style: widget.scanCardButtonStyle ?? ElevatedButton.styleFrom(
+              backgroundColor: primaryColor,
+              minimumSize: const Size(double.infinity, 56),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
             ),
           ),
-            onPressed: widget.addCard,
-            child: Text(widget.addCardButtonText ?? "Add card"),
-          ),
-        )
-      ],
+          Padding(
+            padding: const EdgeInsets.only(top: defaultPadding),
+            child: ElevatedButton(
+              style: widget.addCardButtonStyle ?? OutlinedButton.styleFrom(
+              foregroundColor: Colors.black,
+              minimumSize: const Size(double.infinity, 56),
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+              ),
+            ),
+              onPressed: widget.addCard,
+              child: Text(widget.addCardButtonText ?? "Add card"),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
