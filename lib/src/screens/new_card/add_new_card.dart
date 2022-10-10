@@ -1,3 +1,4 @@
+import 'package:card_scanner/card_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -23,7 +24,8 @@ class AddNewCardForm extends StatefulWidget {
     this.numberFormSuffixIcon,
     this.cvvFormPrefixIcon,
     this.mmyyFormPrefixIcon,
-    this.scanButtonIcon, this.fromKey,
+    this.scanButtonIcon,
+    this.fromKey,
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
@@ -185,7 +187,17 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
           ),
           const Spacer(flex: 2),
           OutlinedButton.icon(
-            onPressed: widget.scan,
+            onPressed: widget.scan ??
+                () async {
+                  final card = await CardScanner.scanCard();
+                  final expiryDate = card!.expiryDate.split('/');
+                  final paymentCard = PaymentCard(
+                    name: card.cardHolderName,
+                    number: card.cardNumber,
+                    month: int.parse(expiryDate[0]),
+                    year: int.parse(expiryDate[1]),
+                  );
+                },
             icon: widget.scanButtonIcon ??
                 SvgPicture.asset("assets/icons/scan.svg"),
             label: Text(widget.scanCardButtonText ?? "Scan card"),

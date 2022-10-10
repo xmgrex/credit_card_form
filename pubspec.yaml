@@ -13,6 +13,9 @@ dependencies:
 
   flutter_svg: ^1.1.1+1
 
+  #https://pub.dev/packages/card_scanner/versions/1.0.1-prerelease
+  card_scanner: ^1.0.1-prerelease
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
