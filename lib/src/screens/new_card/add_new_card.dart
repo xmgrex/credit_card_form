@@ -23,7 +23,7 @@ class AddNewCardForm extends StatefulWidget {
     this.numberFormSuffixIcon,
     this.cvvFormPrefixIcon,
     this.mmyyFormPrefixIcon,
-    this.scanButtonIcon,
+    this.scanButtonIcon, this.fromKey,
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
@@ -40,7 +40,7 @@ class AddNewCardForm extends StatefulWidget {
   final Widget? cvvFormPrefixIcon;
   final Widget? mmyyFormPrefixIcon;
   final Widget? scanButtonIcon;
-
+  final Key? fromKey;
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
 }
@@ -85,6 +85,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
         children: [
           const Spacer(),
           Form(
+            key: widget.fromKey,
             child: Column(
               children: [
                 TextFormField(
