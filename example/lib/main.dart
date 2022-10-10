@@ -55,7 +55,7 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: AddNewCardForm(
-            addCard: () {},
+            addCard: (card) {},
             scan: () {},
             // addCardButtonText: ,
           ),

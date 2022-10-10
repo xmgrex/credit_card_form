@@ -10,8 +10,8 @@ import 'components/input_formatters.dart';
 class AddNewCardForm extends StatefulWidget {
   const AddNewCardForm({
     Key? key,
+    required this.addCard,
     this.scan,
-    this.addCard,
     this.addCardButtonText,
     this.scanCardButtonText,
     this.decoration,
@@ -26,8 +26,8 @@ class AddNewCardForm extends StatefulWidget {
     this.scanButtonIcon,
   }) : super(key: key);
 
+  final Function(PaymentCard) addCard;
   final Function()? scan;
-  final Function()? addCard;
   final String? addCardButtonText;
   final String? scanCardButtonText;
   final InputDecoration? decoration;
@@ -208,7 +208,9 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                       borderRadius: BorderRadius.all(Radius.circular(12)),
                     ),
                   ),
-              onPressed: widget.addCard,
+              onPressed: () {
+                widget.addCard(_paymentCard);
+              },
               child: Text(widget.addCardButtonText ?? "Add card"),
             ),
           )
