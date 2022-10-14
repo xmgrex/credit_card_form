@@ -99,6 +99,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
             child: Column(
               children: [
                 TextFormField(
+                  autofocus: true,
                   onSaved: (cardNum) {
                     _paymentCard.number = CardUtils.getCleanedNumber(cardNum!);
                   },
