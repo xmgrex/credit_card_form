@@ -1,4 +1,4 @@
-import 'package:card_scanner/card_scanner.dart';
+import 'package:credit_card_scanner/credit_card_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +11,7 @@ import 'components/input_formatters.dart';
 class AddNewCardForm extends StatefulWidget {
   const AddNewCardForm({
     Key? key,
+    required this.formKey,
     required this.addCard,
     this.scan,
     this.addCardButtonText,
@@ -23,9 +24,9 @@ class AddNewCardForm extends StatefulWidget {
     this.numberFormPrefixIcon,
     this.numberFormSuffixIcon,
     this.cvvFormPrefixIcon,
-    this.mmyyFormPrefixIcon,
+    this.expiryDateFormPrefixIcon,
     this.scanButtonIcon,
-    this.fromKey,
+    this.enableScanButton = true,
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
@@ -40,22 +41,28 @@ class AddNewCardForm extends StatefulWidget {
   final Widget? numberFormPrefixIcon;
   final Widget? numberFormSuffixIcon;
   final Widget? cvvFormPrefixIcon;
-  final Widget? mmyyFormPrefixIcon;
+  final Widget? expiryDateFormPrefixIcon;
   final Widget? scanButtonIcon;
-  final Key? fromKey;
+  final GlobalKey<FormState> formKey;
+  final bool enableScanButton;
+
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
 }
 
 class _AddNewCardFormState extends State<AddNewCardForm> {
-  TextEditingController creditCardController = TextEditingController();
-  final PaymentCard _paymentCard = PaymentCard();
+  TextEditingController cardNumberController = TextEditingController();
+  TextEditingController cvvController = TextEditingController();
+  TextEditingController expiryDateController = TextEditingController();
+
+  late PaymentCard _paymentCard;
 
   @override
   void initState() {
-    creditCardController.addListener(
+    _paymentCard = PaymentCard();
+    cardNumberController.addListener(
       () {
-        _getCardTypeFrmNumber();
+        _getCardTypeFromNumber();
       },
     );
     super.initState();
@@ -63,18 +70,20 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
 
   @override
   void dispose() {
-    creditCardController.dispose();
+    cardNumberController.dispose();
+    cvvController.dispose();
+    expiryDateController.dispose();
     super.dispose();
   }
 
-  void _getCardTypeFrmNumber() {
-    if (creditCardController.text.length <= 6) {
-      String input = CardUtils.getCleanedNumber(creditCardController.text);
+  void _getCardTypeFromNumber() {
+      print(cardNumberController.text);
+    if (cardNumberController.text.length <= 6) {
+      String input = CardUtils.getCleanedNumber(cardNumberController.text);
       CardType cardType = CardUtils.getCardTypeFrmNumber(input);
       if (cardType != _paymentCard.type) {
-        setState(() {
-          _paymentCard.type = cardType;
-        });
+        _paymentCard.type = cardType;
+        setState(() {});
       }
     }
   }
@@ -87,19 +96,19 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
         children: [
           const Spacer(),
           Form(
-            key: widget.fromKey,
+            key: widget.formKey,
             child: Column(
               children: [
                 TextFormField(
                   onSaved: (cardNum) {
                     _paymentCard.number = CardUtils.getCleanedNumber(cardNum!);
                   },
-                  controller: creditCardController,
+                  controller: cardNumberController,
                   keyboardType: TextInputType.number,
                   validator: CardUtils.validateCardNum,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(19),
+                    LengthLimitingTextInputFormatter(16),
                     CardNumberInputFormatter(),
                   ],
                   decoration: widget.decoration ??
@@ -128,32 +137,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                   children: [
                     Expanded(
                       child: TextFormField(
-                        onSaved: (cvv) {
-                          _paymentCard.cvv = int.parse(cvv!);
-                        },
-                        keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(4),
-                        ],
-                        validator: CardUtils.validateCVV,
-                        decoration: widget.decoration ??
-                            InputDecoration(
-                              prefixIcon: widget.cvvFormPrefixIcon ??
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/Cvv.svg"),
-                                  ),
-                              hintText: widget.hintText ?? "CVV",
-                            ),
-                      ),
-                    ),
-                    const SizedBox(width: defaultPadding),
-                    Expanded(
-                      child: TextFormField(
+                        controller: expiryDateController,
                         onSaved: (value) {
                           List<int> expireDate =
                               CardUtils.getExpiryDate(value!);
@@ -169,7 +153,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                         validator: CardUtils.validateDate,
                         decoration: widget.decoration ??
                             InputDecoration(
-                              prefixIcon: widget.mmyyFormPrefixIcon ??
+                              prefixIcon: widget.expiryDateFormPrefixIcon ??
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 10),
@@ -180,36 +164,55 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                             ),
                       ),
                     ),
+                    const SizedBox(width: defaultPadding),
+                    Expanded(
+                      child: TextFormField(
+                        controller: cvvController,
+                        onSaved: (cvv) {
+                          _paymentCard.cvv = int.parse(cvv!);
+                        },
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.next,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(3),
+                        ],
+                        validator: CardUtils.validateCVV,
+                        decoration: widget.decoration ??
+                            InputDecoration(
+                              prefixIcon: widget.cvvFormPrefixIcon ??
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 10),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/Cvv.svg"),
+                                  ),
+                              hintText: widget.hintText ?? "CVV",
+                            ),
+                      ),
+                    ),
                   ],
                 ),
               ],
             ),
           ),
           const Spacer(flex: 2),
-          OutlinedButton.icon(
-            onPressed: widget.scan ??
-                () async {
-                  final card = await CardScanner.scanCard();
-                  final expiryDate = card!.expiryDate.split('/');
-                  final paymentCard = PaymentCard(
-                    name: card.cardHolderName,
-                    number: card.cardNumber,
-                    month: int.parse(expiryDate[0]),
-                    year: int.parse(expiryDate[1]),
-                  );
-                },
-            icon: widget.scanButtonIcon ??
-                SvgPicture.asset("assets/icons/scan.svg"),
-            label: Text(widget.scanCardButtonText ?? "Scan card"),
-            style: widget.scanCardButtonStyle ??
-                ElevatedButton.styleFrom(
-                  backgroundColor: primaryColor,
-                  minimumSize: const Size(double.infinity, 56),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                  ),
-                ),
-          ),
+          widget.enableScanButton
+              ? OutlinedButton.icon(
+                  onPressed: widget.scan ?? scanCard,
+                  icon: widget.scanButtonIcon ??
+                      SvgPicture.asset("assets/icons/scan.svg"),
+                  label: Text(widget.scanCardButtonText ?? "Scan card"),
+                  style: widget.scanCardButtonStyle ??
+                      ElevatedButton.styleFrom(
+                        backgroundColor: primaryColor,
+                        minimumSize: const Size(double.infinity, 56),
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                        ),
+                      ),
+                )
+              : const SizedBox.shrink(),
           Padding(
             padding: const EdgeInsets.only(top: defaultPadding),
             child: ElevatedButton(
@@ -222,13 +225,44 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                     ),
                   ),
               onPressed: () {
-                widget.addCard(_paymentCard);
+                if (widget.formKey.currentState!.validate()) {
+                  widget.formKey.currentState?.save();
+                  print(_paymentCard.toString());
+                  widget.addCard(_paymentCard);
+                }
               },
               child: Text(widget.addCardButtonText ?? "Add card"),
             ),
           )
         ],
       ),
+    );
+  }
+
+  void scanCard() async {
+    final card = await CardScanner.scanCard();
+
+    final cardNumber = card!.cardNumber;
+    var cardNumValue = TextEditingValue(text: cardNumber);
+    cardNumValue = CardNumberInputFormatter().formatEditUpdate(
+      cardNumValue,
+      cardNumValue,
+    );
+    var expiryDateValue = TextEditingValue(text: card.expiryDate);
+    // expiryDateValue = CardMonthInputFormatter().formatEditUpdate(
+    //   expiryDateValue,
+    //   expiryDateValue,
+    // );
+
+    cardNumberController.value = cardNumValue;
+    expiryDateController.value = expiryDateValue;
+    _getCardTypeFromNumber();
+    final expiryDate = card.expiryDate.split('/');
+    _paymentCard = PaymentCard(
+      name: card.cardHolderName,
+      number: card.cardNumber,
+      month: int.parse(expiryDate[0]),
+      year: int.parse(expiryDate[1]),
     );
   }
 }

@@ -2,6 +2,7 @@ name: credit_card_form
 description: A new Flutter project.
 version: 0.0.1
 homepage:
+publish_to: none
 
 environment:
   sdk: '>=2.18.2 <3.0.0'
@@ -13,8 +14,8 @@ dependencies:
 
   flutter_svg: ^1.1.1+1
 
-  #https://pub.dev/packages/card_scanner/versions/1.0.1-prerelease
-  card_scanner: ^1.0.1-prerelease
+  #https://pub.dev/packages/credit_card_scanner
+  credit_card_scanner: ^1.0.5
 
 dev_dependencies:
   flutter_test:

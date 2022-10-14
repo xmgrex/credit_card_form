@@ -12,6 +12,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -55,8 +56,12 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: AddNewCardForm(
-            addCard: (card) {},
-            scan: () {},
+            formKey: formKey,
+            addCard: (card) {
+              if (formKey.currentState!.validate()) {
+                print(card.toString());
+              }
+            },
             // addCardButtonText: ,
           ),
         ),
