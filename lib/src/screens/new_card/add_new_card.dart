@@ -79,7 +79,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
   void _getCardTypeFromNumber() {
     if (cardNumberController.text.length <= 6) {
       String input = CardUtils.getCleanedNumber(cardNumberController.text);
-      CardType cardType = CardUtils.getCardTypeFrmNumber(input);
+      CardType cardType = CardUtils.getCardTypeFromNumber(input);
       if (cardType != _paymentCard.type) {
         _paymentCard.type = cardType;
         setState(() {});

@@ -204,7 +204,7 @@ class CardUtils {
     return Strings.numberIsInvalid;
   }
 
-  static CardType getCardTypeFrmNumber(String input) {
+  static CardType getCardTypeFromNumber(String input) {
     CardType cardType;
     if (input.startsWith(RegExp(
         r'((5[1-5])|(222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720))'))) {
@@ -228,4 +228,26 @@ class CardUtils {
     }
     return cardType;
   }
+  static CardType getCardTypeFromBrand(String brand) {
+    CardType cardType;
+    if (brand == 'master') {
+      cardType = CardType.Master;
+    } else if (brand == 'visa') {
+      cardType = CardType.Visa;
+    } else if (brand == 'verve') {
+      cardType = CardType.Verve;
+    } else if (brand == 'america_express') {
+      cardType = CardType.AmericanExpress;
+    } else if (brand == 'discover') {
+      cardType = CardType.Discover;
+    } else if (brand == 'diners_club') {
+      cardType = CardType.DinersClub;
+    } else if (brand == 'jcb') {
+      cardType = CardType.Jcb;
+    } else {
+      cardType = CardType.Others;
+    }
+    return cardType;
+  }
 }
+  
