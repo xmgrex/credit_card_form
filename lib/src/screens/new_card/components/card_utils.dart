@@ -236,11 +236,11 @@ class CardUtils {
       cardType = CardType.Visa;
     } else if (brand == 'verve') {
       cardType = CardType.Verve;
-    } else if (brand == 'american_express' || brand == 'amex') {
+    } else if (brand == 'amex') {
       cardType = CardType.AmericanExpress;
     } else if (brand == 'discover') {
       cardType = CardType.Discover;
-    } else if (brand == 'diners_club') {
+    } else if (brand == 'diners') {
       cardType = CardType.DinersClub;
     } else if (brand == 'jcb') {
       cardType = CardType.Jcb;
