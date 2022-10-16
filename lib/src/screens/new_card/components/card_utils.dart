@@ -236,7 +236,7 @@ class CardUtils {
       cardType = CardType.Visa;
     } else if (brand == 'verve') {
       cardType = CardType.Verve;
-    } else if (brand == 'american_express') {
+    } else if (brand == 'american_express' || brand == 'amex') {
       cardType = CardType.AmericanExpress;
     } else if (brand == 'discover') {
       cardType = CardType.Discover;
