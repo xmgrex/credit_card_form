@@ -230,7 +230,7 @@ class CardUtils {
   }
   static CardType getCardTypeFromBrand(String brand) {
     CardType cardType;
-    if (brand == 'master') {
+    if (brand == 'mastercard') {
       cardType = CardType.Master;
     } else if (brand == 'visa') {
       cardType = CardType.Visa;
