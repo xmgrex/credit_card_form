@@ -14,9 +14,6 @@ dependencies:
 
   flutter_svg: ^1.1.1+1
 
-  #https://pub.dev/packages/credit_card_scanner
-  credit_card_scanner: ^1.0.5
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
