@@ -12,9 +12,8 @@ class AddNewCardForm extends StatefulWidget {
     Key? key,
     required this.formKey,
     required this.addCard,
-    this.scan,
+    this.addCardButtonTextStyle,
     this.addCardButtonText,
-    this.scanCardButtonText,
     this.cardNumberHint,
     this.expireDateHint,
     this.cvvHint,
@@ -31,9 +30,7 @@ class AddNewCardForm extends StatefulWidget {
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
-  final Function()? scan;
   final String? addCardButtonText;
-  final String? scanCardButtonText;
   final String? cardNumberHint;
   final String? expireDateHint;
   final String? cvvHint;
@@ -48,6 +45,7 @@ class AddNewCardForm extends StatefulWidget {
   final Color? buttonColor;
   final Color? fillColor;
   final bool? filed;
+  final TextStyle? addCardButtonTextStyle;
 
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
@@ -221,7 +219,10 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                   widget.addCard(_paymentCard);
                 }
               },
-              child: Text(widget.addCardButtonText ?? "Add card"),
+              child: Text(
+                widget.addCardButtonText ?? "Add card",
+                style: widget.addCardButtonTextStyle,
+              ),
             ),
           )
         ],
