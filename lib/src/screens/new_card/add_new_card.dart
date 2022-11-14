@@ -16,7 +16,9 @@ class AddNewCardForm extends StatefulWidget {
     this.addCardButtonText,
     this.scanCardButtonText,
     this.decoration,
-    this.hintText,
+    this.cardNumberHint,
+    this.expireDateHint,
+    this.cvvHint,
     this.addCardButtonStyle,
     this.scanCardButtonStyle,
     this.padding,
@@ -24,6 +26,7 @@ class AddNewCardForm extends StatefulWidget {
     this.numberFormSuffixIcon,
     this.cvvFormPrefixIcon,
     this.expiryDateFormPrefixIcon,
+    this.buttonColor,
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
@@ -31,7 +34,9 @@ class AddNewCardForm extends StatefulWidget {
   final String? addCardButtonText;
   final String? scanCardButtonText;
   final InputDecoration? decoration;
-  final String? hintText;
+  final String? cardNumberHint;
+  final String? expireDateHint;
+  final String? cvvHint;
   final ButtonStyle? addCardButtonStyle;
   final ButtonStyle? scanCardButtonStyle;
   final EdgeInsetsGeometry? padding;
@@ -40,6 +45,7 @@ class AddNewCardForm extends StatefulWidget {
   final Widget? cvvFormPrefixIcon;
   final Widget? expiryDateFormPrefixIcon;
   final GlobalKey<FormState> formKey;
+  final Color? buttonColor;
 
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
@@ -124,7 +130,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                                     : null,
                               ),
                             ),
-                        hintText: widget.hintText ?? "Card number",
+                        hintText: widget.cardNumberHint ?? "カード番号",
                       ),
                 ),
                 const SizedBox(height: 16.0),
@@ -155,7 +161,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                                     child: SvgPicture.asset(
                                         "assets/icons/calender.svg"),
                                   ),
-                              hintText: widget.hintText ?? "MM/YY",
+                              hintText: widget.expireDateHint ?? "MM/YY",
                             ),
                       ),
                     ),
@@ -182,7 +188,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                                     child: SvgPicture.asset(
                                         "assets/icons/Cvv.svg"),
                                   ),
-                              hintText: widget.hintText ?? "CVV",
+                              hintText: widget.cvvHint ?? "CVV",
                             ),
                       ),
                     ),
@@ -198,6 +204,7 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
               style: widget.addCardButtonStyle ??
                   OutlinedButton.styleFrom(
                     foregroundColor: Colors.black,
+                    backgroundColor: widget.buttonColor,
                     minimumSize: const Size(double.infinity, 56),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(12)),
