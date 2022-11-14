@@ -15,7 +15,6 @@ class AddNewCardForm extends StatefulWidget {
     this.scan,
     this.addCardButtonText,
     this.scanCardButtonText,
-    this.decoration,
     this.cardNumberHint,
     this.expireDateHint,
     this.cvvHint,
@@ -27,13 +26,14 @@ class AddNewCardForm extends StatefulWidget {
     this.cvvFormPrefixIcon,
     this.expiryDateFormPrefixIcon,
     this.buttonColor,
+    this.fillColor,
+    this.filed,
   }) : super(key: key);
 
   final Function(PaymentCard) addCard;
   final Function()? scan;
   final String? addCardButtonText;
   final String? scanCardButtonText;
-  final InputDecoration? decoration;
   final String? cardNumberHint;
   final String? expireDateHint;
   final String? cvvHint;
@@ -46,6 +46,8 @@ class AddNewCardForm extends StatefulWidget {
   final Widget? expiryDateFormPrefixIcon;
   final GlobalKey<FormState> formKey;
   final Color? buttonColor;
+  final Color? fillColor;
+  final bool? filed;
 
   @override
   State<AddNewCardForm> createState() => _AddNewCardFormState();
@@ -112,26 +114,27 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                     LengthLimitingTextInputFormatter(16),
                     CardNumberInputFormatter(),
                   ],
-                  decoration: widget.decoration ??
-                      InputDecoration(
-                        prefixIcon: widget.numberFormPrefixIcon ??
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: SvgPicture.asset("assets/icons/card.svg"),
-                            ),
-                        suffixIcon: widget.numberFormSuffixIcon ??
-                            SizedBox(
-                              width: 40,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 8),
-                                child: (_paymentCard.type != null)
-                                    ? CardUtils.getCardIcon(_paymentCard.type)
-                                    : null,
-                              ),
-                            ),
-                        hintText: widget.cardNumberHint ?? "カード番号",
-                      ),
+                  decoration: InputDecoration(
+                    filled: widget.filed,
+                    fillColor: widget.fillColor,
+                    prefixIcon: widget.numberFormPrefixIcon ??
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: SvgPicture.asset("assets/icons/card.svg"),
+                        ),
+                    suffixIcon: widget.numberFormSuffixIcon ??
+                        SizedBox(
+                          width: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 8),
+                            child: (_paymentCard.type != null)
+                                ? CardUtils.getCardIcon(_paymentCard.type)
+                                : null,
+                          ),
+                        ),
+                    hintText: widget.cardNumberHint ?? "カード番号",
+                  ),
                 ),
                 const SizedBox(height: 16.0),
                 Row(
@@ -152,17 +155,18 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                           CardMonthInputFormatter(),
                         ],
                         validator: CardUtils.validateDate,
-                        decoration: widget.decoration ??
-                            InputDecoration(
-                              prefixIcon: widget.expiryDateFormPrefixIcon ??
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/calender.svg"),
-                                  ),
-                              hintText: widget.expireDateHint ?? "MM/YY",
-                            ),
+                        decoration: InputDecoration(
+                          filled: widget.filed,
+                          fillColor: widget.fillColor,
+                          prefixIcon: widget.expiryDateFormPrefixIcon ??
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: SvgPicture.asset(
+                                    "assets/icons/calender.svg"),
+                              ),
+                          hintText: widget.expireDateHint ?? "MM/YY",
+                        ),
                       ),
                     ),
                     const SizedBox(width: defaultPadding),
@@ -179,17 +183,17 @@ class _AddNewCardFormState extends State<AddNewCardForm> {
                           LengthLimitingTextInputFormatter(3),
                         ],
                         validator: CardUtils.validateCVV,
-                        decoration: widget.decoration ??
-                            InputDecoration(
-                              prefixIcon: widget.cvvFormPrefixIcon ??
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/Cvv.svg"),
-                                  ),
-                              hintText: widget.cvvHint ?? "CVV",
-                            ),
+                        decoration: InputDecoration(
+                          filled: widget.filed,
+                          fillColor: widget.fillColor,
+                          prefixIcon: widget.cvvFormPrefixIcon ??
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10),
+                                child: SvgPicture.asset("assets/icons/Cvv.svg"),
+                              ),
+                          hintText: widget.cvvHint ?? "CVV",
+                        ),
                       ),
                     ),
                   ],
